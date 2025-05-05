@@ -1,4 +1,4 @@
-const profesiones = [
+const profesionesData = [
   {
     id: 1,
     nombre: "Ingeniero",
@@ -54,3 +54,5 @@ const profesiones = [
       "Produce material visual para comunicar mensajes a través de medios digitales",
   },
 ];
+
+export default profesionesData;
