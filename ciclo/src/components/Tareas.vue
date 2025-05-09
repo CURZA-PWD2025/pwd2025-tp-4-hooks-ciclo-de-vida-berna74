@@ -17,22 +17,28 @@
       <li
         v-for="(tarea, index) in tareas"
         :key="index"
-        :class="{ existente: index < tareasExistentes }"
+        :class="{ existente: indicesExistentes.includes(index), nueva: !indicesExistentes.includes(index) }"
         class="item-tarea"
       >
-        {{ tarea }}
+        <span>{{ tarea }}</span>
       </li>
     </ul>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
+import { ref, onUpdated } from "vue";
 
 // Lista de tareas inicial
 const tareas = ref<string[]>(["Crear usuario", "Borrar usuario", "Dar permisos"]); // Lista inicial de tareas
 const nuevaTarea = ref<string>(""); // Tarea nueva que vamos a agregar
-const tareasExistentes = ref<number>(tareas.value.length); // Cantidad de tareas que ya estaban antes de modificar
+const indicesExistentes = ref<number[]>(tareas.value.map((_, index) => index)); // Índices de las tareas existentes al inicio
+
+// Hook que se ejecuta después de que el DOM se actualice
+onUpdated(() => {
+  console.log("Después de actualizar el DOM: actualizando índices de tareas existentes");
+  indicesExistentes.value = tareas.value.map((_, index) => index).slice(0, -1); // Excluye la última tarea (nueva)
+});
 
 // Función para agregar una nueva tarea
 const agregarTarea = () => {
@@ -113,7 +119,14 @@ form {
 }
 
 /* Estilo para las tareas que ya estaban antes de modificar */
-.item-tarea.existente {
-  background-color: #d1e7dd; 
+.item-tarea.existente span {
+  color: #ff5722; /* Naranja */
+  font-weight: bold;
+}
+
+/* Estilo para las tareas nuevas */
+.item-tarea.nueva span {
+  color: #4caf50; /* Verde */
+  font-weight: bold;
 }
 </style>
